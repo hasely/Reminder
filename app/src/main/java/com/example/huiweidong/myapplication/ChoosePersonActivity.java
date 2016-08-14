@@ -2,14 +2,11 @@ package com.example.huiweidong.myapplication;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.provider.ContactsContract;
-import android.support.annotation.MainThread;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -17,15 +14,17 @@ import java.util.ArrayList;
 
 
 public class ChoosePersonActivity extends AppCompatActivity {
+    public Intent i = new Intent(this, MainActivity.class);
     ListView list;
     //LIST OF ARRAY STRINGS WHICH WILL SERVE AS LIST ITEMS
     ArrayList<String> listItems=new ArrayList<String>();
-
     //DEFINING A STRING ADAPTER WHICH WILL HANDLE THE DATA OF THE LISTVIEW
     ArrayAdapter<String> adapter;
-
     Bundle bundle = new Bundle();
-    public Intent i = new Intent(this, MainActivity.class);
+
+    public void foo() {
+
+    }
 
 
     @Override
