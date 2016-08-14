@@ -22,9 +22,7 @@ public class ChoosePersonActivity extends AppCompatActivity {
     ArrayAdapter<String> adapter;
     Bundle bundle = new Bundle();
 
-    public void foo() {
 
-    }
 
 
     @Override
