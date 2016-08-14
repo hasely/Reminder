@@ -1,13 +1,9 @@
-package com.example.huiweidong.myapplication;
+package com.example.huiweidong.Reminder;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.provider.ContactsContract;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity {
 

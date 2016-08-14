@@ -1,4 +1,4 @@
-package com.example.huiweidong.myapplication;
+package com.example.huiweidong.Reminder;
 
 import android.content.Intent;
 import android.database.Cursor;

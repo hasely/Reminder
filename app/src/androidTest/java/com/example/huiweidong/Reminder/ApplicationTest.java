@@ -1,4 +1,4 @@
-package com.example.huiweidong.myapplication;
+package com.example.huiweidong.Reminder;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

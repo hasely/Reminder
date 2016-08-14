@@ -7,15 +7,15 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.huiweidong.myapplication.MainActivity">
+    tools:context="com.example.huiweidong.Reminder.MainActivity">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
 
         <TableRow
             android:layout_width="match_parent"
@@ -23,11 +23,11 @@
             android:nestedScrollingEnabled="true">
 
             <Button
+                android:id="@+id/button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/choose_person"
-                android:id="@+id/button"
-                android:onClick="openChoosePersonActivity" />
+                android:onClick="openChoosePersonActivity"
+                android:text="@string/choose_person" />
         </TableRow>
 
         <TableRow
@@ -36,9 +36,9 @@
             android:layout_gravity="center_horizontal">
 
             <ListView
+                android:id="@+id/listView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/listView" />
+                android:layout_height="wrap_content" />
         </TableRow>
     </LinearLayout>
 </RelativeLayout>
