@@ -1,5 +1,7 @@
 package com.example.huiweidong.Reminder;
 
+import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import java.util.ArrayList;
 
@@ -16,14 +19,12 @@ import java.util.ArrayList;
 
 public class ChoosePersonActivity extends AppCompatActivity {
     ListView list;
+    SearchView search;
+
     //LIST OF ARRAY STRINGS WHICH WILL SERVE AS LIST ITEMS
-    ArrayList<String> listItems=new ArrayList<String>();
+    ArrayList<String> listItems = new ArrayList<String>();
     //DEFINING A STRING ADAPTER WHICH WILL HANDLE THE DATA OF THE LISTVIEW
     ArrayAdapter<String> adapter;
-    Bundle bundle = new Bundle();
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +32,9 @@ public class ChoosePersonActivity extends AppCompatActivity {
         setContentView(R.layout.activity_choose_person);
 
         list = (ListView) findViewById(R.id.listView2);
+        search = (SearchView) findViewById(R.id.searchView);
 
-        adapter=new ArrayAdapter<String>(this,
+        adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1,
                 listItems);
         //setListAdapter(adapter);
@@ -44,7 +46,8 @@ public class ChoosePersonActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapter, View myView, int myItemInt, long mylng) {
                 String selectedFromList = (String) (list.getItemAtPosition(myItemInt));
                 Log.i("DEBUG", selectedFromList);
-
+                Intent intent = new Intent(ChoosePersonActivity.this, SetTime.class);
+                startActivity(intent);
             }
         });
         getPersonsFromContacts();
@@ -56,50 +59,54 @@ public class ChoosePersonActivity extends AppCompatActivity {
     public void getPersonsFromContacts() {
         // Do something in response to button
         // get the whole table
-        Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,null, null, null, null);
+        Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+
+
         if (c != null) {
             while (c.moveToNext()) {
                 //get name
                 int nameFieldColumnIndex = c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
                 String name = c.getString(nameFieldColumnIndex);
                 //get nummber
-                int contactId = c.getColumnIndex(ContactsContract.Contacts._ID);
-                String id = c.getString(contactId);
+                ContentResolver cr = getContentResolver();
+                Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null,
+                        "DISPLAY_NAME = '" + name + "'", null, null);
 
+                if (cursor.moveToFirst()) {
+                    String contactId =
+                            cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                    //
+                    //  Get all phone numbers.
+                    //
+                    Cursor phones = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null);
+                    while (phones.moveToNext()) {
+                        String number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        int type = phones.getInt(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
+                        switch (type) {
+                            case ContactsContract.CommonDataKinds.Phone.TYPE_HOME:
+                                listItems.add(name + "\n" + "home" + number);
 
-                Log.i("DEBUG", name);
-                Log.i("DEBUG", id);
-                Log.i("DEBUG", getPhoneNumber(id));
-                listItems.add(name + id + "\n" + getPhoneNumber(id));
+                                break;
+                            case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
+                                listItems.add(name + "\n" + number);
+                                break;
+                            case ContactsContract.CommonDataKinds.Phone.TYPE_WORK:
+                                // do something with the Work number here...
+                                break;
+                        }
+                    }
+                    phones.close();
 
+                    //Log.i("DEBUG", name);
+                    //listItems.add(name + id + "\n" + getPhoneNumber(id));
+
+                }
             }
-        }
-        c.close();
-    }
-
-    /**
-     * @param id
-     * @return
-     */
-   public String getPhoneNumber(String id)
-    {
-        // TODO: Bugfixing! Does not as expectedt. some Phonenumbers are not showed
-        String number = "";
-        Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone._ID + " = " + id, null, null);
-
-        if(phones.getCount() > 0)
-        {
-           while(phones.moveToNext())
-            {
-                number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                //System.out.println(number);
-            }
-
+            c.close();
         }
 
-        phones.close();
 
-        return number;
     }
 
 }
