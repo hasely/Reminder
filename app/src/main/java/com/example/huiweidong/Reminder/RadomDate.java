@@ -70,6 +70,7 @@ public class RadomDate {
             calendar.add(Calendar.WEEK_OF_YEAR, nr1);
 
         }
+
         Random random = new Random();
         int nr = random.nextInt(unsharpenDays * 2 + 1) - repeatInteval;
         calendar.add(Calendar.DAY_OF_MONTH, nr);

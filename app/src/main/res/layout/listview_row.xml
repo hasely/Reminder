@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="15dp"
+        android:textColor="@color/bright_foreground_inverse_material_dark"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+
+    <LinearLayout
+        android:id="@+id/forStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/StringStartsAt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:text="Starts at: "
+            android:textColor="#809bf5"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#809bf5"
+            android:textSize="16dp" />
+    </LinearLayout>
+
+    <!-- 2nd LinearLayout for repeat info -->
+    <LinearLayout
+        android:id="@+id/forRepeat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/StringRepeat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/StringStartsAt"
+            android:paddingLeft="20dp"
+            android:text="Repeat every "
+            android:textColor="#809bf5"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/repeatsNr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#809bf5"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/repeatsInt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:paddingLeft="5dp"
+            android:textColor="#809bf5"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/StringUnsharpen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/StringStartsAt"
+            android:paddingLeft="5dp"
+            android:text=" +/- "
+            android:textColor="#809bf5"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/unsharpenNr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:textColor="#809bf5"
+            android:textSize="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:text="days"
+            android:textColor="#809bf5"
+            android:textSize="16dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/forNext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:text="Next call time: "
+            android:textColor="#809bf5"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/radomDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#809bf5"
+            android:textSize="16dp" />
+
+    </LinearLayout>
+
+</LinearLayout>
