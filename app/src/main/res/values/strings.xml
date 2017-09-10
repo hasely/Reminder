@@ -1,4 +1,54 @@
 <resources>
     <string name="app_name">Reminder</string>
-    <string name="choose_person">Add new Reminder</string>
+    <string name="calendar">calendar</string>
+    <string name="title_activity_my_notification">myNotification</string>
+    <string-array name="intervall">
+        <item>Month(s)</item>
+        <item>Week(s)</item>
+        <item>Days</item>
+    </string-array>
+
+    <integer-array name="anzahlArray">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+    </integer-array>
+
+
+    <string name="new_message_notification_title_template"> %1$s</string>
+    <string name="selectZeitraum"> Zeitraum </string>
+    <string name="selectANr"> Anzahl </string>
+
+
+    <!-- TODO: remove this placeholder text -->
+    <string name="new_message_notification_placeholder_text_template">You said %1$s and lorem ipsum
+        dolor sit amet, consectetur adipiscing elit. Etiam non enim magna. Morbi dictum, velit vel
+        semper venenatis, magna odio volutpat velit, at ullamcorper nulla lacus sed turpis.
+        Pellentesque vitae metus elit, nec tincidunt tellus. Integer sed nisl sem, ullamcorper
+        ornare lacus. Duis ac mauris sed massa congue volutpat. Donec sed erat sit amet turpis
+        viverra rhoncus sit amet nec magna. Donec lacinia ligula at libero volutpat volutpat nec nec
+        tortor.
+    </string>
+
+    <string name="action_cancel">Cancel</string>
+    <string name="action_anrufen">Anrufen</string>
+
+
 </resources>
