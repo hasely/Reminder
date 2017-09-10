@@ -10,11 +10,7 @@ import static com.example.huiweidong.Reminder.com.example.huiweidong.Reminder.Ac
 import static com.example.huiweidong.Reminder.com.example.huiweidong.Reminder.Activities.SetTimeActivity.nr1;
 
 
-/**
- * Created by HuiweiDong on 21.12.16.
- */
-
-public class RadomDate {
+public class RandomDate {
 
     Calendar calendar = Calendar.getInstance();
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy"); // define new date format
@@ -40,11 +36,12 @@ public class RadomDate {
 
     }
 
+
     /**
      * set a string date to the wanted format
      *
      * @param
-     * @throws ParseException
+     *
      */
     private String setStringDate(Date date) {
         String formatedDate = dateFormat.format(date);
@@ -60,7 +57,7 @@ public class RadomDate {
      * @param repeatInteval
      *
      */
-    public void setRadomDate(String beginnDate, int repeatInteval, int unsharpenDays) {
+    public void setRandomDate(String beginnDate, int repeatInteval, int unsharpenDays) {
 
         calendar.setTime(setDateFormat(beginnDate));
 
@@ -75,12 +72,9 @@ public class RadomDate {
         int nr = random.nextInt(unsharpenDays * 2 + 1) - repeatInteval;
         calendar.add(Calendar.DAY_OF_MONTH, nr);
 
-        String tempStringDate = calendar.getTime().toString();
-        Date temp = setDateFormat(tempStringDate);
-
+        Date temp = calendar.getTime();
 
         this.randomDate = setStringDate(temp);
-        //this.randomDate=  beginnDate;
     }
 
 

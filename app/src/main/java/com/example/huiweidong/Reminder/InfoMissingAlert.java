@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 
 /**
- * Created by HuiweiDong on 21.12.16.
+ *
  * alert if info not komplet
  */
 
@@ -24,6 +24,8 @@ public class InfoMissingAlert {
 
             }
         });
+
+        builder.create().show();
 
     }
 

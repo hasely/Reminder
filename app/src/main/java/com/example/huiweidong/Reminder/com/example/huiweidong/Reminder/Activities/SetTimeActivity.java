@@ -23,7 +23,7 @@ import com.example.huiweidong.Reminder.Database;
 import com.example.huiweidong.Reminder.DateOfDay;
 import com.example.huiweidong.Reminder.InfoMissingAlert;
 import com.example.huiweidong.Reminder.R;
-import com.example.huiweidong.Reminder.RadomDate;
+import com.example.huiweidong.Reminder.RandomDate;
 
 import java.text.ParseException;
 import java.util.Calendar;
@@ -49,7 +49,7 @@ public class SetTimeActivity extends AppCompatActivity {
     private CheckBox checkBox;
     private Button b_confirm;
     private Button buttonCancel;
-    private String radomDate = null;
+    private String randomDate = null;
     //datapicker get the current date
     private DatePickerDialog.OnDateSetListener dpickerListner = new DatePickerDialog.OnDateSetListener() {
         @Override
@@ -201,24 +201,27 @@ public class SetTimeActivity extends AppCompatActivity {
 //
 //        //Toast.makeText(this, startDate, Toast.LENGTH_LONG).show();
 //        //get nr1
-//
+        if (!et_nr1.getText().toString().isEmpty() && !et_nr2.getText().toString().isEmpty()) {
+
         nr1 = getNr(et_nr1);
-//
         nr2 = getNr(et_nr2);
-//        Toast.makeText(this, getString(nr1), Toast.LENGTH_LONG).show();
+            RandomDate randomDate = new RandomDate();
+            randomDate.setRandomDate(startDate, nr1, nr2);
+            String rd = randomDate.getRandomDate();
 //
-//        //calculate radom date
-        RadomDate radomDate = new RadomDate();
-        radomDate.setRadomDate(startDate, nr1, nr2);
-        String rd = radomDate.getRandomDate();
-//
-        // Toast.makeText(this, rd, Toast.LENGTH_LONG).show();
+
         Database.getInstance(SetTimeActivity.this).insertData(
                 ChoosePersonActivity.name, startDate,
                 nr1,
                 inteval_value, "ja",
                 nr2, rd);
         confirmDone();
+
+        } else {
+            InfoMissingAlert.infoMissing(this);
+        }
+
+
     }
 
     private void confirmDone() {

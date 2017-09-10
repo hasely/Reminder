@@ -3,7 +3,7 @@ package com.example.huiweidong.Reminder;
 import java.util.Calendar;
 
 /**
- * Created by HuiweiDong on 20.12.16.
+ *
  * get the current date
  */
 

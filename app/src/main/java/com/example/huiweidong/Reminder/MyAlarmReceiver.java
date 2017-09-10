@@ -40,7 +40,7 @@ public class MyAlarmReceiver extends BroadcastReceiver {
 
             //set the old radom date als start date for next reminder
             /*try {
-                newRadomDate = RadomDate.newRadomDate(cursor.getString(5),cursor.getString(3),cursor.getInt(4));
+                newRadomDate = RandomDate.newRadomDate(cursor.getString(5),cursor.getString(3),cursor.getInt(4));
             } catch (ParseException e) {
                 e.printStackTrace();
             }

@@ -1,8 +1,6 @@
 package com.example.huiweidong.Reminder;
 
-/**
- * Created by HuiweiDong on 29.10.16.
- */
+
 public class reminderClass {
     private long id;
     private String startsAt;
