@@ -27,14 +27,17 @@ public class RadomDate {
      * @throws ParseException
      */
     private Date setDateFormat(String sDate) {
+        Date dDate = null;
         try {
-            Date dDate = dateFormat.parse(sDate); //parse string date into date
+            dDate = dateFormat.parse(sDate); //parse string date into date
 
-            return dDate;
         } catch (ParseException e) {
             System.err.println("Fehler von String date to Date date: " + e.getMessage());
-            return null;
+            // return null;
         }
+
+        return dDate;
+
     }
 
     /**
@@ -55,10 +58,9 @@ public class RadomDate {
      *
      * @param beginnDate
      * @param repeatInteval
-     * @throws ParseException
+     *
      */
     public void setRadomDate(String beginnDate, int repeatInteval, int unsharpenDays) {
-
 
         calendar.setTime(setDateFormat(beginnDate));
 
@@ -68,7 +70,6 @@ public class RadomDate {
             calendar.add(Calendar.WEEK_OF_YEAR, nr1);
 
         }
-
         Random random = new Random();
         int nr = random.nextInt(unsharpenDays * 2 + 1) - repeatInteval;
         calendar.add(Calendar.DAY_OF_MONTH, nr);
@@ -79,7 +80,6 @@ public class RadomDate {
 
         this.randomDate = setStringDate(temp);
         //this.randomDate=  beginnDate;
-
     }
 
 
