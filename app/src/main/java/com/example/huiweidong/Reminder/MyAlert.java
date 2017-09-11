@@ -4,19 +4,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 
-/**
- *
- * alert if info not komplet
- */
 
-public class InfoMissingAlert {
+public class MyAlert {
 
     public static AlertDialog.Builder builder = null;
 
-
-    public static void infoMissing(Context context) {
+    public static void myAlert(Context context, String alertText) {
         builder = new AlertDialog.Builder(context);
-        builder.setMessage("Info nicht vollständig");
+        builder.setMessage(alertText);
+
         builder.setPositiveButton("zurück", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -24,9 +20,7 @@ public class InfoMissingAlert {
 
             }
         });
-
         builder.create().show();
-
     }
 
 }

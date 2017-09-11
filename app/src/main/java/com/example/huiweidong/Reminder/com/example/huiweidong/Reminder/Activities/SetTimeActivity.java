@@ -21,7 +21,7 @@ import android.widget.Spinner;
 
 import com.example.huiweidong.Reminder.Database;
 import com.example.huiweidong.Reminder.DateOfDay;
-import com.example.huiweidong.Reminder.InfoMissingAlert;
+import com.example.huiweidong.Reminder.MyAlert;
 import com.example.huiweidong.Reminder.R;
 import com.example.huiweidong.Reminder.RandomDate;
 
@@ -72,7 +72,6 @@ public class SetTimeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_set_time);
 
         setDefaultDate();
-
         ll1 = (LinearLayout) findViewById(R.id.ll1);
         ll2 = (LinearLayout) findViewById(R.id.ll2);
         ll3 = (LinearLayout) findViewById(R.id.ll3);
@@ -148,7 +147,7 @@ public class SetTimeActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                InfoMissingAlert.infoMissing(SetTimeActivity.this);
+                MyAlert.myAlert(SetTimeActivity.this, "info not complett");
             }
         });
 
@@ -208,21 +207,18 @@ public class SetTimeActivity extends AppCompatActivity {
             RandomDate randomDate = new RandomDate();
             randomDate.setRandomDate(startDate, nr1, nr2);
             String rd = randomDate.getRandomDate();
-//
-
-        Database.getInstance(SetTimeActivity.this).insertData(
-                ChoosePersonActivity.name, startDate,
-                nr1,
-                inteval_value, "ja",
-                nr2, rd);
-        confirmDone();
-
+            Database.getInstance(SetTimeActivity.this).insertData(
+                    ChoosePersonActivity.name, startDate,
+                    nr1,
+                    inteval_value, "ja",
+                    nr2, rd);
+            confirmDone();
         } else {
-            InfoMissingAlert.infoMissing(this);
+            MyAlert.myAlert(SetTimeActivity.this, "Please fill all infos!");
         }
 
-
     }
+
 
     private void confirmDone() {
         builder = new AlertDialog.Builder(SetTimeActivity.this);

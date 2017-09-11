@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.example.huiweidong.Reminder.Database;
+import com.example.huiweidong.Reminder.MyAlert;
 import com.example.huiweidong.Reminder.R;
 
 import java.util.ArrayList;
@@ -52,14 +54,18 @@ search.setOnClickListener(new View.OnClickListener() {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapter, View myView, int myItemInt, long mylng) {
                 name = (String) (list.getItemAtPosition(myItemInt));
-
-                Bundle b = new Bundle(); //专门用于不同activity之间传递数据
-                b.putString("ACTION", "Add");
-                Intent intent = new Intent(ChoosePersonActivity.this, SetTimeActivity.class);
-                intent.putExtras(b);
-                startActivity(intent);
+                if (Database.getInstance(ChoosePersonActivity.this).isExist(name) == false) {
+                    Bundle b = new Bundle(); //专门用于不同activity之间传递数据
+                    b.putString("ACTION", "Add");
+                    Intent intent = new Intent(ChoosePersonActivity.this, SetTimeActivity.class);
+                    intent.putExtras(b);
+                    startActivity(intent);
+                } else {
+                    MyAlert.myAlert(ChoosePersonActivity.this, "This Person is already setted!");
+                }
             }
         });
+
 
         getPersonsFromContacts();
     }

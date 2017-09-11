@@ -14,20 +14,21 @@ public class Database extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "Reminder.db";
     private static final String TABLE_NAME = "Reminder_tabledb";
     private static final int DATABASE_VERSION = 6;
-
-    private static Database myDb;
+    public static String[] infosInARow = null;
+    public static String COL_1 = "ID";
+    public static String COL_2 = "CONTACT_PERSON";
+    public static String COL_3 = "STARTSAT";
 
 
     //define variablen --> columm names
-
-//    public static String COL_1 = "ID";
-//    public static String COL_2 = "CONTACT_PERSON";
-//    public static String COL_3 = "STARTSAT";
-//    public static Integer COL_4 = Integer.valueOf("REPEATSNR");
-//    public static String COL_5 = "REPEATSINTERVAL";
-//    public static String COL_6 = "UNSHARPEN";
-//    public static Integer COL_7 = Integer.valueOf("UNSHARPENNR");
-//    public static String COL_8= "RADOMDATE";
+    public static Integer COL_4 = Integer.valueOf("REPEATSNR");
+    public static String COL_5 = "REPEATSINTERVAL";
+    public static String COL_6 = "UNSHARPEN";
+    public static Integer COL_7 = Integer.valueOf("UNSHARPENNR");
+    public static String COL_8 = "RADOMDATE";
+    private static Database myDb;
+    SQLiteDatabase db = getReadableDatabase();
+    Cursor c = null;
 
 
     //Konstructor
@@ -67,8 +68,8 @@ public class Database extends SQLiteOpenHelper {
      * @return
      */
     public Cursor getAllData() {
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("select * from " + "Reminder_tabledb", null);
+        //SQLiteDatabase db = getReadableDatabase();
+        c = db.rawQuery("select * from " + TABLE_NAME, null);
         return c;
     }
 
@@ -78,8 +79,8 @@ public class Database extends SQLiteOpenHelper {
      * @return
      */
     public Cursor getDataFromARow(String ID) {
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM Reminder_tabledb WHERE _id = ?", new String[]{ID});
+        //SQLiteDatabase db = getReadableDatabase();
+        c = db.rawQuery("SELECT * FROM Reminder_tabledb WHERE _id = ?", new String[]{ID});
         if (c.getCount() > 0) {
             c.moveToFirst();
         }
@@ -96,25 +97,36 @@ public class Database extends SQLiteOpenHelper {
         return c;
     }
 
+    public String[] getRow(String name) {
 
-    public reminderClass getReminderObjectFromRow(long ID) {
-        reminderClass rc = new reminderClass();
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM Reminder_tabledb WHERE _id = ?", new String[]{Long.toString(ID)});
-        if (c.getCount() > 0) {
-            c.moveToFirst();
+        c = db.query(TABLE_NAME, new String[]{COL_2, COL_3, COL_4.toString(), COL_5, COL_7.toString(), COL_8}, "CONTACT_PERSON=?", new String[]{name}, null, null, null);
+        while (c.moveToNext()) {
+            String nameFound = c.getString(c.getColumnIndex(COL_2));
+            if (nameFound.equals(name)) {
+                infosInARow = new String[]{COL_2, COL_3, COL_4.toString(), COL_5, COL_7.toString(), COL_8};
+            }
+        }
+        return infosInARow;
+    }
 
-            rc.setId(c.getLong(0));
-            rc.setContactPerson(c.getString(1));
-            rc.setStartsAt(c.getString(2));
-            rc.setRepeatsNr(c.getString(3));
-            rc.setRepeatsInterval(c.getString(4));
-            rc.setUnsharpen(c.getString(5));
-            rc.setUnsharpenNr(c.getString(6));
-            rc.setUnsharpenInterval(c.getString(7));
+//    public reminderClass getReminderObjectFromRow(long ID) {
+//        reminderClass rc = new reminderClass();
+//       // SQLiteDatabase db = getReadableDatabase();
+//         c = db.rawQuery("SELECT * FROM Reminder_tabledb WHERE _id = ?", new String[]{Long.toString(ID)});
+//        if (c.getCount() > 0) {
+//            c.moveToFirst();
+//
+//            rc.setId(c.getLong(0));
+//            rc.setContactPerson(c.getString(1));
+//            rc.setStartsAt(c.getString(2));
+//            rc.setRepeatsNr(c.getString(3));
+//            rc.setRepeatsInterval(c.getString(4));
+//            rc.setUnsharpen(c.getString(5));
+//            rc.setUnsharpenNr(c.getString(6));
+//            rc.setUnsharpenInterval(c.getString(7));
 
             //Log.d("Debug", "---------------------以下测试是否能够读取数据库中的内容------------------------");
-        }
+
         //c.getString(2);
         //c.moveToFirst();
         //Log.d("Debug", "---------------------以下是cursor在数据库中读取到的行数------------------------");
@@ -123,14 +135,14 @@ public class Database extends SQLiteOpenHelper {
         //c.getCount();
         //Log.d("Debug", "---------------------以下为判断editext是否为null------------------------");
 
-        c.close();
-        db.close();
-        return rc;
-    }
+//        c.close();
+//        db.close();
+//        return rc;
+//    }
 
     public void insertData(String vKONTACT_PERSON, String vSTARTSAT, int vREPEATSNR, String vREPEATSINTERVAL, String vUNSHARPEN,
                            int vUNSHARPENNR, String vRADOMDATE) {
-        SQLiteDatabase db = getReadableDatabase();
+        // SQLiteDatabase db = getReadableDatabase();
 
         db.execSQL("INSERT INTO Reminder_tabledb(CONTACT_PERSON,STARTSAT,REPEATSNR,REPEATSINTERVAL,UNSHARPEN,UNSHARPENNR,RADOMDATE)" +
                 "values (?,?,?,?,?,?,?)", new Object[]{vKONTACT_PERSON, vSTARTSAT, vREPEATSNR, vREPEATSINTERVAL, vUNSHARPEN, vUNSHARPENNR, vRADOMDATE});
@@ -157,17 +169,35 @@ public class Database extends SQLiteOpenHelper {
 
 
     public void deleteData(String ID) {
-        SQLiteDatabase db = getReadableDatabase();
+        //SQLiteDatabase db = getReadableDatabase();
         db.execSQL("DELETE FROM Reminder_tabledb WHERE _id =" + ID);
     }
 
     //// TODO: 21.12.16 wenn mehr als ein Termin zufällig an dem gleichen Tag existiert
     public Cursor radomDateQuery() {
         String dateOfDay = DateOfDay.getDateOfDay();
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT _id, CONTACT_PERSON,REPEATSNR,REPEATSINTERVAL,UNSHARPENNR,RADOMDATE FROM Reminder_tabledb WHERE RADOMDATE = ?", new String[]{dateOfDay});
+
+        c = db.rawQuery("SELECT _id, CONTACT_PERSON,REPEATSNR,REPEATSINTERVAL,UNSHARPENNR,RADOMDATE FROM Reminder_tabledb WHERE RADOMDATE = ?", new String[]{dateOfDay});
 
         return c;
+    }
+
+    /**
+     * check if the contact person already exist
+     *
+     * @param name
+     * @return
+     */
+    public boolean isExist(String name) {
+
+        c = db.query(TABLE_NAME, new String[]{COL_2}, "CONTACT_PERSON=?", new String[]{name}, null, null, null);
+        while (c.moveToNext()) {
+            String nameFound = c.getString(c.getColumnIndex(COL_2));
+            if (nameFound.equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

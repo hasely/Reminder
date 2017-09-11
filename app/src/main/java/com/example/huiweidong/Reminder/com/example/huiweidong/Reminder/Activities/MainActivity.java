@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
                 //// TODO: 21.12.16 : edit implementieren
-                //menu.add(0, 0, 0, "edit");
+                menu.add(0, 0, 0, "edit");
                 menu.add(0, 1, 0, "delete");
                 menu.add(0, 2, 0, "cancel");
             }
@@ -97,9 +97,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         switch (item.getItemId()) {
-            /*case 0: //edit
+            case 0: //edit
                 clickOnEdit(_id);
-                break;*/
+                break;
 
             case 1: //delete
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -156,18 +156,19 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-   /* public void clickOnEdit(long _id) {
+    //TODO: implementieren!
+    public void clickOnEdit(long _id) {
 
         b = new Bundle(); //专门用于不同activity之间传递数据
         b.putString("ACTION", "Edit");//键值方式
         b.putLong("ID", _id);
+        b.putStringArray("Info", Database.infosInARow);
 
 
         Intent intent = new Intent(this, SetTimeActivity.class);
         intent.putExtras(b);
         startActivity(intent);
-
-    }*/
+    }
 
 }
 
