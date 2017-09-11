@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -68,29 +69,69 @@ public class SetTimeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_time);
 
-        setDefaultDate();
         ll1 = (LinearLayout) findViewById(R.id.ll1);
         ll2 = (LinearLayout) findViewById(R.id.ll2);
         ll3 = (LinearLayout) findViewById(R.id.ll3);
 
+        et_date = (EditText) findViewById(R.id.et_date);
         et_nr1 = (EditText) findViewById(R.id.et_nr1);
+
+
+        spinner = (Spinner) findViewById(R.id.spinner);
+        checkBox = (CheckBox) findViewById(R.id.checkBox);
+
         et_nr2 = (EditText) findViewById(R.id.et_nr2);
 
-        setStartDate();
-        setSpinner();
-        setCheckBox();
-        showDialogOnImageButton();
-        setConfirmButton();
+        Bundle bundle = this.getIntent().getExtras();
+
+        if (bundle != null) {
+            if (bundle.containsKey("ACTION") && bundle.getString("ACTION").equals("Edit")) {
+                String[] info = bundle.getStringArray("Info");
+
+                et_date.setText(info[0]);
+                et_date.setHintTextColor(Color.GRAY);
+
+                et_nr1.setText(info[1]);
+                et_nr1.setHintTextColor(Color.GRAY);
+
+                String s = info[2];
+                if (s.equals("Month(s)")) {
+                    spinner.setSelection(0);
+                } else if (s.equals("Week(s)")) {
+                    spinner.setSelection(1);
+                } else {
+                    spinner.setSelection(2);
+                }
+
+                checkBox.setChecked(true);
+                ll3.setVisibility(View.VISIBLE);
+
+                et_nr2.setText(info[3]);
+                et_nr1.setHintTextColor(Color.GRAY);
+
+            } else {
+                setDefaultDate();
+                setStartDate();
+                setSpinner();
+                setCheckBox();
+                showDialogOnImageButton();
+                setConfirmButton();
+            }
+
+        }
     }
+
+
+
 
     /**
      * set actuell date als default date in edittext
      */
     private void setStartDate() {
-        et_date = (EditText) findViewById(R.id.et_date);
         et_date.setHint(DateOfDay.getDateOfDay());
     }
 
@@ -132,7 +173,6 @@ public class SetTimeActivity extends AppCompatActivity {
 
     private void setSpinner() {
 
-        spinner = (Spinner) findViewById(R.id.spinner);
         String[] inteval = getResources().getStringArray(R.array.intervall);
         //intSpinner1.setPrompt("eine Zahl auswählen");
         ArrayAdapter<String> adapter_repeatnr = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, inteval);
@@ -154,7 +194,7 @@ public class SetTimeActivity extends AppCompatActivity {
     }
 
     private void setCheckBox() {
-        checkBox = (CheckBox) findViewById(R.id.checkBox);
+
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

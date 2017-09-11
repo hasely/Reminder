@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
     Database db;
     Bundle b;
 
-    AlertDialog.Builder builder = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,10 +158,15 @@ public class MainActivity extends AppCompatActivity {
     //TODO: implementieren!
     public void clickOnEdit(long _id) {
 
+        String[] infos = Database.getInstance(MainActivity.this).getDataFromARow(Long.toString(_id));
+
+
         b = new Bundle(); //专门用于不同activity之间传递数据
         b.putString("ACTION", "Edit");//键值方式
-        b.putLong("ID", _id);
-        b.putStringArray("Info", Database.infosInARow);
+        // b.putLong("ID", _id);
+
+
+        b.putStringArray("Info", infos);
 
 
         Intent intent = new Intent(this, SetTimeActivity.class);

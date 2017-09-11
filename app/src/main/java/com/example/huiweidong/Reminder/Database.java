@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  *
@@ -14,18 +15,17 @@ public class Database extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "Reminder.db";
     private static final String TABLE_NAME = "Reminder_tabledb";
     private static final int DATABASE_VERSION = 6;
-    public static String[] infosInARow = null;
-    public static String COL_1 = "ID";
-    public static String COL_2 = "CONTACT_PERSON";
-    public static String COL_3 = "STARTSAT";
+    public static String COL_0 = "ID";
+    public static String COL_1 = "CONTACT_PERSON";
+    public static String COL_2 = "STARTSAT";
 
 
     //define variablen --> columm names
-    public static Integer COL_4 = Integer.valueOf("REPEATSNR");
-    public static String COL_5 = "REPEATSINTERVAL";
-    public static String COL_6 = "UNSHARPEN";
-    public static Integer COL_7 = Integer.valueOf("UNSHARPENNR");
-    public static String COL_8 = "RADOMDATE";
+    public static String COL_3 = "REPEATSNR";
+    public static String COL_4 = "REPEATSINTERVAL";
+    public static String COL_5 = "UNSHARPEN";
+    public static String COL_6 = "UNSHARPENNR";
+    public static String COL_7 = "RADOMDATE";
     private static Database myDb;
     SQLiteDatabase db = getReadableDatabase();
     Cursor c = null;
@@ -78,7 +78,8 @@ public class Database extends SQLiteOpenHelper {
      *
      * @return
      */
-    public Cursor getDataFromARow(String ID) {
+    public String[] getDataFromARow(String ID) {
+        String[] infos = new String[4];
         //SQLiteDatabase db = getReadableDatabase();
         c = db.rawQuery("SELECT * FROM Reminder_tabledb WHERE _id = ?", new String[]{ID});
         if (c.getCount() > 0) {
@@ -92,22 +93,29 @@ public class Database extends SQLiteOpenHelper {
         //c.getCount();
         //Log.d("Debug", "---------------------以下为判断editext是否为null------------------------");
 
-
-        db.close();
-        return c;
-    }
-
-    public String[] getRow(String name) {
-
-        c = db.query(TABLE_NAME, new String[]{COL_2, COL_3, COL_4.toString(), COL_5, COL_7.toString(), COL_8}, "CONTACT_PERSON=?", new String[]{name}, null, null, null);
-        while (c.moveToNext()) {
-            String nameFound = c.getString(c.getColumnIndex(COL_2));
-            if (nameFound.equals(name)) {
-                infosInARow = new String[]{COL_2, COL_3, COL_4.toString(), COL_5, COL_7.toString(), COL_8};
-            }
+        infos[0] = c.getString(2);
+        infos[1] = c.getString(3);
+        infos[2] = c.getString(4);
+        infos[3] = c.getString(6);
+        for (int i = 0; i < infos.length; i++) {
+            Log.d("TAG", infos[i]);
         }
-        return infosInARow;
+        db.close();
+        return infos;
+
     }
+
+//    public String[] getRow(String name) {
+//
+//        c = db.query(TABLE_NAME, new String[]{COL_2, COL_3, COL_4.toString(), COL_5, COL_7.toString(), COL_8}, "CONTACT_PERSON=?", new String[]{name}, null, null, null);
+//        while (c.moveToNext()) {
+//            String nameFound = c.getString(c.getColumnIndex(COL_2));
+//            if (nameFound.equals(name)) {
+//                infosInARow = new String[]{COL_2, COL_3, COL_4.toString(), COL_5, COL_7.toString(), COL_8};
+//            }
+//        }
+//        return infosInARow;
+//    }
 
 //    public reminderClass getReminderObjectFromRow(long ID) {
 //        reminderClass rc = new reminderClass();

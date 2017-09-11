@@ -75,7 +75,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv2"
         android:background="#ede4e4"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="1">
 
 
         <EditText
@@ -91,10 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
-            android:layout_weight="0.75"
-            android:background="@drawable/textview_border"
             android:entries="@array/intervall"
-            android:spinnerMode="dialog"
             android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#6a88f6"
