@@ -3,12 +3,14 @@
     <string name="calendar">calendar</string>
     <string name="title_activity_my_notification">myNotification</string>
     <string-array name="intervall">
+        <item>-----</item>
         <item>Month(s)</item>
         <item>Week(s)</item>
         <item>Days</item>
     </string-array>
 
     <integer-array name="anzahlArray">
+        <item>0</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>

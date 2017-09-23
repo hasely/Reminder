@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         fillAdapter();
 
-        ItemOnLongClick();
+        ItemOnClick();
 
         //wenn das programm an ist, dann soll alarm immer im Hitergrund laufen
         Intent i = new Intent(this, LongtermAlarm.class);
@@ -67,15 +67,14 @@ public class MainActivity extends AppCompatActivity {
                 CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
         list.setAdapter(adapter);
+
 //// TODO: 19.10.16 list in alphabetical order
     }
 
-    private void ItemOnLongClick() {
-
+    private void ItemOnClick() {
 
 //create a menu for "delete, cancel"
         list.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
-
             @Override
             public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
                 //// TODO: 21.12.16 : edit implementieren

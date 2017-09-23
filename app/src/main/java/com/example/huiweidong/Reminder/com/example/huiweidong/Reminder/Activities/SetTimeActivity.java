@@ -4,21 +4,19 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
+import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
+import android.widget.NumberPicker;
 
 import com.example.huiweidong.Reminder.Database;
 import com.example.huiweidong.Reminder.DateOfDay;
@@ -34,24 +32,31 @@ public class SetTimeActivity extends AppCompatActivity {
     private static final int DIALOG_ID = 0;
     public static int nr1;
     public static int nr2;
-    public static String inteval_value;
-    public static int repeatNr1;
+    public static int temp = 15;
+    public static String inteval_value = "Week(s)";
     private static int year_x, month_x, day_x;
     AlertDialog.Builder builder = null;
     private LinearLayout ll1 = null;
     private LinearLayout ll2 = null;
     private LinearLayout ll3 = null;
-    private EditText et_nr1;
-    private EditText et_nr2;
-    //TODO: this edittext is only for date
+    private LinearLayout ll4 = null;
     private EditText et_date;
     private String startDate;
-    private Spinner spinner;
+
+    private MyNumberPicker numberPicker1;
+    private MyNumberPicker numberPicker2;
+    private MyNumberPicker intervalPicker;
+    private String[] forIntervalPicker = {"Month(s)", "Week(s)", "Day(s)"};
+
     private CheckBox checkBox;
     private Button b_confirm;
-    private Button buttonCancel;
+    private Button b_Cancel;
+
+    private String oldDate;
     private String randomDate = null;
-    //datapicker get the current date
+    /**
+     * user chooses a date from DataPicker, et_date shows this date
+     */
     private DatePickerDialog.OnDateSetListener dpickerListner = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -59,8 +64,10 @@ public class SetTimeActivity extends AppCompatActivity {
             month_x = monthOfYear + 1;
             day_x = dayOfMonth;
             et_date.setText(day_x + "." + month_x + "." + year_x);
+            startDate = et_date.getText().toString();
         }
     };
+    private View view;
 
     private static int getNr(EditText et) {
         String s = et.getText().toString();
@@ -69,70 +76,160 @@ public class SetTimeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_time);
 
+        getAllElement();
+        setTextEdit();
+
+        Bundle bundle = this.getIntent().getExtras();
+        if (bundle.containsKey("ACTION") && bundle.getString("ACTION").equals("Edit")) {
+
+//            Log.d("TAG","--------------------------------------------------------------");
+//            Log.d("TAG", String.valueOf(info.length));
+//            Log.d("TAG", info[0] );
+//            Log.d("TAG",info[1]);
+//            Log.d("TAG",info[2]);     Log.d("TAG",info[3]);
+//            Log.d("TAG","--------------------------------------------------------------");
+
+            loadOldInfo(bundle);
+        } else {
+            initiateInfo();
+        }
+
+        oldDate = String.valueOf(et_date.getHint());
+    }
+
+    private void getAllElement() {
         ll1 = (LinearLayout) findViewById(R.id.ll1);
         ll2 = (LinearLayout) findViewById(R.id.ll2);
         ll3 = (LinearLayout) findViewById(R.id.ll3);
-
+        ll4 = (LinearLayout) findViewById(R.id.ll4);
         et_date = (EditText) findViewById(R.id.et_date);
-        et_nr1 = (EditText) findViewById(R.id.et_nr1);
-
-
-        spinner = (Spinner) findViewById(R.id.spinner);
+        numberPicker1 = (MyNumberPicker) findViewById(R.id.numberPicker1);
+        intervalPicker = (MyNumberPicker) findViewById(R.id.intervalPicker);
+        numberPicker2 = (MyNumberPicker) findViewById(R.id.numberPicker2);
         checkBox = (CheckBox) findViewById(R.id.checkBox);
-
-        et_nr2 = (EditText) findViewById(R.id.et_nr2);
-
-        Bundle bundle = this.getIntent().getExtras();
-
-        if (bundle != null) {
-            if (bundle.containsKey("ACTION") && bundle.getString("ACTION").equals("Edit")) {
-                String[] info = bundle.getStringArray("Info");
-
-                et_date.setText(info[0]);
-                et_date.setHintTextColor(Color.GRAY);
-
-                et_nr1.setText(info[1]);
-                et_nr1.setHintTextColor(Color.GRAY);
-
-                String s = info[2];
-                if (s.equals("Month(s)")) {
-                    spinner.setSelection(0);
-                } else if (s.equals("Week(s)")) {
-                    spinner.setSelection(1);
-                } else {
-                    spinner.setSelection(2);
-                }
-
-                checkBox.setChecked(true);
-                ll3.setVisibility(View.VISIBLE);
-
-                et_nr2.setText(info[3]);
-                et_nr1.setHintTextColor(Color.GRAY);
-
-            } else {
-                setDefaultDate();
-                setStartDate();
-                setSpinner();
-                setCheckBox();
-                showDialogOnImageButton();
-                setConfirmButton();
-            }
-
-        }
+        b_confirm = (Button) findViewById(R.id.b_confirm);
+        b_Cancel = (Button) findViewById(R.id.b_cancel);
     }
 
-
-
+    private void initiateInfo() {
+        setNumberPicker(numberPicker1, 15);
+        inteval_value = setIntervalPicker(intervalPicker, null);
+        setNumberPicker(numberPicker2, 15);
+        setCheckBox();
+        setConfirmButton();
+        setCancelButton();
+    }
 
     /**
-     * set actuell date als default date in edittext
+     * this method is used with Edit together.
+     * if info for a person already setted, then load setted info on this page
+     *
+     * @param b bundel with setted infomation
      */
-    private void setStartDate() {
+    private void loadOldInfo(Bundle b) {
+        String[] info = b.getStringArray("Info");
+        et_date.setHint(info[0]);
+        setNumberPicker(numberPicker1, Integer.valueOf(info[1]));
+        Log.d("TAG", "--------------------------------------------------------------");
+        Log.d("TAG", "nr1 = " + String.valueOf(nr1));
+        Log.d("TAG", "--------------------------------------------------------------");
+
+        setIntervalPicker(intervalPicker, info[2]);
+
+        if (Integer.valueOf(info[3]) != 0) {
+            ll3.setVisibility(View.VISIBLE);
+            checkBox.setChecked(true);
+            setNumberPicker(numberPicker2, Integer.valueOf(info[3]));
+        }
+
+        //oldDate = String.valueOf(et_date.getText());
+
+    }
+
+    private void setTextEdit() {
+        et_date.requestFocus();
         et_date.setHint(DateOfDay.getDateOfDay());
+        setDefaultDate();
+        //setInfo();
+        et_date.setInputType(InputType.TYPE_NULL); //hide soft keyboard
+        et_date.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog(DIALOG_ID);
+            }
+        }));
+        startDate = String.valueOf(et_date.getText());
+    }
+
+    /**
+     * set 2 nummerPickers
+     */
+    private void setNumberPicker(MyNumberPicker numberPicker, int i) {
+        numberPicker.setMinValue(1);
+        numberPicker.setMaxValue(30);
+        numberPicker.setValue(i);
+
+        numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                temp = newVal;
+                Log.d("TAG", "--------------------------------------------------------------");
+                Log.d("TAG", "temp = " + String.valueOf(temp));
+                Log.d("TAG", "--------------------------------------------------------------");
+                if (picker.equals(numberPicker1)) {
+                    nr1 = temp;
+                }
+                nr2 = temp;
+            }
+        });
+
+    }
+
+    /**
+     * set interval Picker
+     */
+
+    private String setIntervalPicker(MyNumberPicker intervalPicker, String value) {
+        intervalPicker.setDisplayedValues(forIntervalPicker);
+        intervalPicker.setMinValue(0);
+        intervalPicker.setMaxValue(forIntervalPicker.length - 1);
+        if (value != null) {
+            switch (value) {
+                case "Month(s)":
+                    intervalPicker.setValue(2);
+                case "Week(s)":
+                    intervalPicker.setValue(1);
+                case "Day(s)":
+                    intervalPicker.setValue(0);
+            }
+        } else {
+            intervalPicker.setValue(1);
+        }
+        intervalPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                temp = newVal;
+            }
+        });
+
+        if (temp == 0) {
+            inteval_value = "Day(s)";
+        } else {
+            inteval_value = "Month(s)";
+        }
+
+        return inteval_value;
+    }
+
+    /**
+     * if first time add info for a person, then load no info on this page
+     */
+    private void setInfo() {
+        et_date.setHint(DateOfDay.getDateOfDay());
+        setCheckBox();
     }
 
     //set the current date for the calender, otherweise calender starts with year 1900
@@ -143,63 +240,36 @@ public class SetTimeActivity extends AppCompatActivity {
         day_x = cal.get(Calendar.DAY_OF_MONTH);
     }
 
-    /*
-       click on calander Bild, wird der aktuelle Datum angezeigt.
-        */
-    private void showDialogOnImageButton() {
-        ImageButton imageButton = (ImageButton) findViewById(R.id.ib_calander);
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog(DIALOG_ID);
-            }
-        });
-    }
+    //click confirm button, return result back to Mainactivity
+
+    /**
+     * click on clock pic, datapicker is showed. and the actual date will be marked on data picker
+     */
+//    private void showDialogOnImageButton() {
+//        ImageButton imageButton = (ImageButton) findViewById(R.id.ib_calander);
+//        imageButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showDialog(DIALOG_ID);
+//            }
+//        });
+//    }
 
     @Override
     //创建Dialog（对话框）类
     protected Dialog onCreateDialog(int id) {
         if (id == DIALOG_ID)
             return new DatePickerDialog(this, dpickerListner, year_x, month_x, day_x);
-
         return null;
     }
 
-    /*private void setAdapter(Spinner s){
-        adapter = ArrayAdapter.createFromResource(this, R.array.intervall, android.R.layout.simple_spinner_item);
-        adapter_repeatnr.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        s.setAdapter(adapter_repeatnr);
-    }*/
-
-    private void setSpinner() {
-
-        String[] inteval = getResources().getStringArray(R.array.intervall);
-        //intSpinner1.setPrompt("eine Zahl auswählen");
-        ArrayAdapter<String> adapter_repeatnr = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, inteval);
-        adapter_repeatnr.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                inteval_value = parent.getItemAtPosition(position).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                MyAlert.myAlert(SetTimeActivity.this, "info not complett");
-            }
-        });
-
-    }
-
     private void setCheckBox() {
-
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked == true) {
                     ll3.setVisibility(View.VISIBLE);
+                    checkBox.setTextColor(getResources().getColor(R.color.black));
                 } else if (isChecked == false) {
                     ll3.setVisibility(View.INVISIBLE);
                 }
@@ -208,11 +278,7 @@ public class SetTimeActivity extends AppCompatActivity {
 
     }
 
-    //click confirm button, return result back to Mainactivity
-
     private void setConfirmButton() {
-        b_confirm = (Button) findViewById(R.id.b_confirm);
-
         // Toast.makeText(this, "jinru Button", Toast.LENGTH_LONG).show();
         b_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -227,7 +293,20 @@ public class SetTimeActivity extends AppCompatActivity {
         });
     }
 
-    private void openMainActivity(View view) {
+    private void setCancelButton() {
+        // Toast.makeText(this, "jinru Button", Toast.LENGTH_LONG).show();
+        b_Cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SetTimeActivity.this, MainActivity.class);
+                //intent.putExtra(EXTRA_MESSAGE, message);
+                startActivity(intent);
+            }
+        });
+    }
+
+    public void openMainActivity(View view) {
+
         Intent intent = new Intent(this, MainActivity.class);
         //intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
@@ -235,18 +314,21 @@ public class SetTimeActivity extends AppCompatActivity {
     }
 
     private void addDataInDB() throws ParseException {
-
-        startDate = String.valueOf(et_date.getText());
-//
-//        //Toast.makeText(this, startDate, Toast.LENGTH_LONG).show();
-//        //get nr1
-        if (!et_nr1.getText().toString().isEmpty() && !et_nr2.getText().toString().isEmpty()) {
-
-        nr1 = getNr(et_nr1);
-        nr2 = getNr(et_nr2);
+        //check if all info entered, if not, they should be filled
+        boolean startDateEntered = hasContent(et_date);
+        //boolean intervalDaysNrEntered = hasContent(et_nr2);
+        boolean checkboxChecked = isChecked(checkBox);
+// if all info entered, then save info in DB
+        if (startDateEntered && checkboxChecked) {
             RandomDate randomDate = new RandomDate();
             randomDate.setRandomDate(startDate, nr1, nr2);
             String rd = randomDate.getRandomDate();
+
+            Log.d("TAG", "--------------------------------------------------------------");
+            Log.d("TAG", "save date in Db: nr1 = " + String.valueOf(nr1));
+            Log.d("TAG", "--------------------------------------------------------------");
+
+
             Database.getInstance(SetTimeActivity.this).insertData(
                     ChoosePersonActivity.name, startDate,
                     nr1,
@@ -256,9 +338,42 @@ public class SetTimeActivity extends AppCompatActivity {
         } else {
             MyAlert.myAlert(SetTimeActivity.this, "Please fill all infos!");
         }
-
     }
 
+
+    /**
+     * check if start date entered
+     */
+    private boolean hasContent(EditText et) {
+        if (et.getText().length() == 0) {
+            et.setHint("?");
+            et.setHintTextColor(getResources().getColor(R.color.red));
+            return false;
+        } else {
+            et.setTextColor(getResources().getColor(R.color.black));
+            return true;
+        }
+    }
+
+    /**
+     * chech if checkbox is checked
+     */
+    private boolean isChecked(CheckBox checkBox) {
+        if (checkBox.isChecked() == false) {
+            checkBox.setTextColor(getResources().getColor(R.color.red));
+            return false;
+        }
+        return true;
+    }
+
+    private boolean startDateChanged(String oldDate, String newDate) {
+        if (oldDate.equals(newDate)) {
+            return true;
+        } else {
+            MyAlert.myAlert(SetTimeActivity.this, "Startdate is not set");
+            return false;
+        }
+    }
 
     private void confirmDone() {
         builder = new AlertDialog.Builder(SetTimeActivity.this);
@@ -278,7 +393,7 @@ public class SetTimeActivity extends AppCompatActivity {
     }
 
 
-//        DatabaseClass.getInstance(SetTimeActivity.this).insertData(
+    //        DatabaseClass.getInstance(SetTimeActivity.this).insertData(
 //                ChoosePersonActivity.name, String.valueOf(et_startdate.getText()),
 //                //String.valueOf(et_repeatnr.getText()),
 //                //"spinner内容", "1",

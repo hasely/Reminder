@@ -33,7 +33,6 @@ public class ChoosePersonActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_person);
-
         list = (ListView) findViewById(R.id.listView2);
 
         //TODO: Searchview implementieren
